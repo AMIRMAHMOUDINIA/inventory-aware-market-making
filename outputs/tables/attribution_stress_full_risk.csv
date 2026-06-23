@@ -1,0 +1,13 @@
+component,pnl
+Passive spread capture,1.1753084347760137
+Maker fees,-0.006
+Forced execution,-0.22080000000001476
+Drift inventory P&L,0.0
+Information inventory P&L,-7.898228939529188
+Noise inventory P&L,-3.8621681457660832
+Jump inventory P&L,0.0
+Unclassified price P&L,3.312905505481467e-13
+Terminal inventory adjustment,0.0
+Attributed terminal P&L,-10.811888650518942
+Reported terminal P&L,-10.811888650518899
+Reconciliation error,4.263256414560601e-14

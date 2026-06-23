@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+title: Inventory-Aware Market-Making Simulator
+message: If you reuse the code or experiments, please cite this repository.
+type: software
+authors:
+  - family-names: Mahmoudinia
+    given-names: Amir
+version: 1.0.0
+date-released: 2026-06-18
+license: MIT

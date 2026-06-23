@@ -1,0 +1,8 @@
+Executed 01_market_microstructure.ipynb
+Executed 02_event_driven_simulator.ipynb
+Executed 03_fixed_spread_baseline.ipynb
+Executed 04_inventory_aware_quoting.ipynb
+Executed 05_volatility_aware_spreads.ipynb
+Executed 06_adverse_selection.ipynb
+Executed 07_risk_controls.ipynb
+Executed 08_full_evaluation_and_pnl_attribution.ipynb

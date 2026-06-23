@@ -1,0 +1,9 @@
+,value
+positive_mid_prices,True
+non_crossed_quotes,True
+interval_reconciliation_pass,True
+terminal_reconciliation_pass,True
+maximum_interval_error,5.684341886080802e-14
+terminal_reconciliation_error,4.263256414560601e-14
+inventory_limit_pass,True
+markout_identity_pass,True

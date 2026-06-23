@@ -1,0 +1,16 @@
+monte_carlo:
+  core_paths: 40
+  robustness_paths: 18
+  base_seed: 50000
+simulation:
+  initial_mid_price: 100.0
+  time_horizon: 1.0
+  number_of_steps: 250
+market:
+  baseline_intensity: 90.0
+  distance_sensitivity: 18.0
+  maker_fee_per_unit: 0.001
+execution:
+  liquidation_half_spread: 0.05
+  taker_fee_per_unit: 0.002
+  impact_per_unit: 0.0008

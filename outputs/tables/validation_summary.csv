@@ -1,0 +1,4 @@
+scenario,strategy,positive_mid_prices,non_crossed_quotes,interval_reconciliation_pass,terminal_reconciliation_pass,maximum_interval_error,terminal_reconciliation_error,markout_identity_pass,inventory_limit_pass
+toxic,fixed,True,True,True,True,2.651212582804874e-13,3.090860900556436e-12,True,
+regime_switching,full_adaptive,True,True,True,True,6.628031457012185e-14,3.304023721284466e-13,True,
+stress,full_risk,True,True,True,True,5.684341886080802e-14,4.263256414560601e-14,True,True

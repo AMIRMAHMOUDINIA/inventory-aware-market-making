@@ -1,0 +1,32 @@
+Generated 1,200 paired path-strategy records.
+        scenario             strategy  mean_terminal_pnl  pnl_5_percentile  mean_markout_per_unit
+           clean                fixed           3.412374         -5.770058               0.055083
+           clean        full_adaptive           2.916983          0.395857               0.090538
+           clean            full_risk           2.916983          0.395857               0.090538
+           clean            inventory           3.497412          0.231789               0.053055
+           clean inventory_volatility           3.123969         -0.015486               0.081872
+ high_volatility                fixed           3.083607        -21.220302               0.057060
+ high_volatility        full_adaptive           0.278773         -6.298733               0.151353
+ high_volatility            full_risk          -0.408777         -8.574559               0.151204
+ high_volatility            inventory           1.513807         -8.090779               0.050633
+ high_volatility inventory_volatility           0.922392         -5.224339               0.133345
+       one_sided                fixed           2.589933        -33.072656               0.053567
+       one_sided        full_adaptive           2.834082         -6.888390               0.102901
+       one_sided            full_risk           3.003862         -6.888390               0.102973
+       one_sided            inventory           3.489103         -8.718861               0.056280
+       one_sided inventory_volatility           3.264685         -7.564479               0.089171
+regime_switching                fixed           0.012943        -20.214144               0.005292
+regime_switching        full_adaptive           1.684583         -6.300394               0.074620
+regime_switching            full_risk           1.684583         -6.300394               0.074620
+regime_switching            inventory           0.333403         -8.851306               0.006998
+regime_switching inventory_volatility           2.302334         -4.687495               0.061921
+          stress                fixed         -62.118215       -284.973340              -0.127651
+          stress        full_adaptive          -1.671398        -15.391653              -0.008453
+          stress            full_risk          -1.153948        -11.163365              -0.009752
+          stress            inventory         -34.715715       -139.639161              -0.130414
+          stress inventory_volatility          -7.060020        -56.773782              -0.029935
+           toxic                fixed          -2.863340        -21.858940              -0.002809
+           toxic        full_adaptive           1.655407         -5.066106               0.072351
+           toxic            full_risk           1.742099         -5.066106               0.072112
+           toxic            inventory          -1.212906        -11.056972              -0.006317
+           toxic inventory_volatility           0.977489         -6.407537               0.048769
