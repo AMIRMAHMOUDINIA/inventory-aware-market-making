@@ -21,19 +21,19 @@ The model begins with fixed two-sided quotes. I then add inventory skew, volatil
 
 The saved experiment uses **40 paired paths per strategy and scenario**, six market scenarios, five strategy variants, and 250 intervals per path, giving **1,200 path–strategy records**. I kept the sample small enough to rerun on a laptop. The numbers describe these particular synthetic settings, not live profitability.
 
-- In the toxic-flow scenario, fixed quoting had mean terminal P&L of **−2.86** and a 5th-percentile outcome of **−21.86**. The full adaptive strategy produced **+1.66** and **−5.07**, while mean absolute inventory fell from **6.40** to **1.72** units.
-- In the stress scenario, fixed quoting averaged **−62.12**, with a 5th percentile of **−284.97**. The full adaptive strategy averaged **−1.67**, and the risk-controlled version averaged **−1.15** with a 5th percentile of **−11.16**. Under the configured limits, the risk-controlled strategy halted on **22.5%** of stress paths.
-- Under one-sided flow, inventory-aware quoting reduced mean absolute inventory from **20.88** units for fixed quoting to **7.91** units. The full adaptive strategy reduced it further to **6.03** units.
-- In the regime-switching scenario, volatility-aware inventory quoting raised mean P&L from **0.33** for inventory-only quoting to **2.30**, while the 5th percentile improved from **−8.85** to **−4.69**.
-- Stronger volatility defence reduced trading volume and inventory exposure and improved downside outcomes, but it did not always maximize average P&L.
-- Representative toxic, regime-switching, and stress paths passed quote, inventory, markout, interval-accounting, and terminal-accounting checks. The largest interval reconciliation error was below **3 × 10⁻¹³**, and the largest terminal residual was below **4 × 10⁻¹²**.
-- The included test suite contains **87 passing tests**.
+* In the toxic-flow scenario, fixed quoting had mean terminal P&L of **−2.86** and a 5th-percentile outcome of **−21.86**. The full adaptive strategy produced **+1.66** and **−5.07**, while mean absolute inventory fell from **6.40** to **1.72** units.
+* In the stress scenario, fixed quoting averaged **−62.12**, with a 5th percentile of **−284.97**. The full adaptive strategy averaged **−1.67**, and the risk-controlled version averaged **−1.15** with a 5th percentile of **−11.16**. Under the configured limits, the risk-controlled strategy halted on **22.5%** of stress paths.
+* Under one-sided flow, inventory-aware quoting reduced mean absolute inventory from **20.88** units for fixed quoting to **7.91** units. The full adaptive strategy reduced it further to **6.03** units.
+* In the regime-switching scenario, volatility-aware inventory quoting raised mean P&L from **0.33** for inventory-only quoting to **2.30**, while the 5th percentile improved from **−8.85** to **−4.69**.
+* Stronger volatility defense reduced trading volume and inventory exposure and improved downside outcomes, but it did not always maximize average P&L.
+* Representative toxic, regime-switching, and stress paths passed quote, inventory, markout, interval-accounting, and terminal-accounting checks. The largest interval reconciliation error was below **3 × 10⁻¹³**, and the largest terminal residual was below **4 × 10⁻¹²**.
+* The included test suite contains **87 passing tests**.
 
-![Toxic-market mean and tail P&L](outputs/figures/01_toxic_mean_and_tail_pnl.png)
+![Toxic-market mean and tail P\&L](outputs/figures/01_toxic_mean_and_tail_pnl.png)
 
 ![Inventory exposure](outputs/figures/03_inventory_exposure.png)
 
-![P&L attribution](outputs/figures/04_pnl_attribution.png)
+![P\&L attribution](outputs/figures/04_pnl_attribution.png)
 
 ![Volatility response](outputs/figures/06_volatility_response.png)
 
@@ -58,31 +58,27 @@ I fixed the order because changing it can create look-ahead bias or move costs b
 
 ## Strategy variants
 
-| Strategy | Inventory skew | Volatility width | Markout defence | Hard risk overlay |
-|---|---:|---:|---:|---:|
-| `fixed` | No | No | No | No |
-| `inventory` | Yes | No | No | No |
-| `inventory_volatility` | Yes | Yes | No | No |
-| `full_adaptive` | Yes | Yes | Yes | No |
-| `full_risk` | Yes | Yes | Yes | Yes |
+| Strategy               | Inventory skew | Volatility width | Markout defense | Hard risk overlay |
+| ---------------------- | -------------: | ---------------: | --------------: | ----------------: |
+| `fixed`                |             No |               No |              No |                No |
+| `inventory`            |            Yes |               No |              No |                No |
+| `inventory_volatility` |            Yes |              Yes |              No |                No |
+| `full_adaptive`        |            Yes |              Yes |             Yes |                No |
+| `full_risk`            |            Yes |              Yes |             Yes |               Yes |
 
 ## P&L accounting
 
-For each interval:
+For each interval, the wealth change is decomposed as:
 
-\[
-\Delta W_t
-=
-\Pi_t^{\text{forced}}
-+
-\Pi_t^{\text{passive spread}}
--
-C_t^{\text{maker fees}}
-+
-q_t^+\Delta m_t.
-\]
+```text
+change in wealth =
+    forced-execution P&L
+  + passive spread capture
+  - maker fees
+  + inventory price P&L
+```
 
-In scenarios with coupled toxic flow, price P&L is further separated into drift, information, independent noise, and jump components. Terminal liquidation is recorded as its own final wealth adjustment.
+In scenarios with coupled toxic flow, the inventory price P&L is further separated into drift, information, independent noise, and jump components. Terminal liquidation is recorded as its own final wealth adjustment.
 
 ## Files
 
@@ -152,19 +148,19 @@ print(result.intervals[[
 
 The tests and validation records cover:
 
-- quote positivity, non-crossing, and tick rounding;
-- buy/sell sign conventions;
-- cash and inventory updates;
-- spread-plus-price markout identities;
-- estimator resets between paths;
-- signal-dependent toxic-flow direction;
-- identical exogenous price paths across paired strategies;
-- inventory-size capacity and hard-limit enforcement;
-- risk-state transitions and persistent halts;
-- forced-execution spread, fee, and impact costs;
-- information, noise, drift, and jump decomposition;
-- new-fill and carried-inventory decomposition;
-- interval and terminal P&L reconciliation.
+* quote positivity, non-crossing, and tick rounding;
+* buy/sell sign conventions;
+* cash and inventory updates;
+* spread-plus-price markout identities;
+* estimator resets between paths;
+* signal-dependent toxic-flow direction;
+* identical exogenous price paths across paired strategies;
+* inventory-size capacity and hard-limit enforcement;
+* risk-state transitions and persistent halts;
+* forced-execution spread, fee, and impact costs;
+* information, noise, drift, and jump decomposition;
+* new-fill and carried-inventory decomposition;
+* interval and terminal P&L reconciliation.
 
 ## Where the model stops
 
