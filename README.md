@@ -99,7 +99,7 @@ In scenarios with coupled toxic flow, price P&L is further separated into drift,
 .
 ├── config/experiments.yaml
 ├── docs/
-├── notebooks/                         # Eight executed notebooks
+├── notebooks/                         # notebooks/ # Nine executed notebooks
 ├── outputs/
 │   ├── data/                          # Paired path results and representative paths
 │   ├── figures/                       # Nine generated figures
