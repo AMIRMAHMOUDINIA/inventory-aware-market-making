@@ -18,6 +18,7 @@ The model begins with fixed two-sided quotes. I then add inventory skew, volatil
 6. Can side-specific markout feedback protect the quote that is being selected against?
 7. When do reduce-only states, forced reduction, cooldowns, and halts improve the left tail despite their execution cost?
 8. Do the same conclusions remain visible when every strategy is run on identical exogenous market paths?
+
 ## What happened in the configured runs
 
 The saved experiment uses **40 paired paths per strategy and scenario**, six market scenarios, five strategy variants, and 250 intervals per path, giving **1,200 path–strategy records**. I kept the sample small enough to rerun on a laptop. The numbers describe these particular synthetic settings, not live profitability.
@@ -87,7 +88,7 @@ For each interval, the change in marked-to-market wealth is decomposed into forc
 -
 C_t^{\text{maker fees}}
 +
-q_t^+ \Delta m_t
+q_t \Delta m_t
 ```
 
 In scenarios with coupled toxic flow, price P&L is further separated into drift, information, independent noise, and jump components. Terminal liquidation is recorded as its own final wealth adjustment.
