@@ -103,19 +103,6 @@ pytest
 python scripts/run_all_experiments.py
 ```
 
-In scenarios with coupled toxic flow, price P&L is further separated into drift, information, independent noise, and jump components. Terminal liquidation is recorded as its own final wealth adjustment.
-
-## Run it locally
-
-```bash
-python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev]"
-pytest
-python scripts/run_all_experiments.py
-```
-
 The experiment script recreates the main tables, representative path data, validation records, and figures with fixed seeds.
 ## Small example
 
