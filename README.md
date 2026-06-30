@@ -93,6 +93,24 @@ q_t \Delta m_t
 
 In scenarios with coupled toxic flow, price P&L is further separated into drift, information, independent noise, and jump components. Terminal liquidation is recorded as its own final wealth adjustment.
 
+## Files
+
+```text
+.
+├── config/experiments.yaml
+├── docs/
+├── notebooks/                         # Nine executed notebooks
+├── outputs/
+│   ├── data/                          # Paired path results and representative paths
+│   ├── figures/                       # Nine generated figures
+│   └── tables/                        # Strategy, attribution, robustness, validation tables
+├── scripts/run_all_experiments.py
+├── src/market_maker_lab/              # Simulator and analysis code
+├── tests/                             # 87 automated tests
+├── pyproject.toml
+└── requirements.txt
+```
+
 ## Run it locally
 
 ```bash
