@@ -104,7 +104,6 @@ python scripts/run_all_experiments.py
 ```
 
 The experiment script recreates the main tables, representative path data, validation records, and figures with fixed seeds.
-
 ## Small example
 
 ```python
