@@ -88,12 +88,15 @@ For each interval, the change in marked-to-market wealth is decomposed into forc
 C_t^{\text{maker fees}}
 +
 q_t^+ \Delta m_t
+```
+
+In scenarios with coupled toxic flow, price P&L is further separated into drift, information, independent noise, and jump components. Terminal liquidation is recorded as its own final wealth adjustment.
 
 ## Run it locally
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate          # Windows: .venv\Scripts\activate
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
 python -m pip install --upgrade pip
 python -m pip install -e ".[dev]"
 pytest
