@@ -80,7 +80,7 @@ I fixed the order because changing it can create look-ahead bias or move costs b
 
 For each interval, the change in marked-to-market wealth is decomposed into forced-execution P&L, passive spread capture, maker fees, and inventory markout:
 
-\[
+```math
 \Delta W_t =
 \Pi_t^{\text{forced}}
 +
@@ -89,7 +89,6 @@ For each interval, the change in marked-to-market wealth is decomposed into forc
 C_t^{\text{maker fees}}
 +
 q_t^+ \Delta m_t
-\]
 
 In scenarios with coupled toxic flow, price P&L is further separated into drift, information, independent noise, and jump components. Terminal liquidation is recorded as its own final wealth adjustment.
 
