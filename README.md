@@ -32,7 +32,7 @@ The canonical experiment uses **40 paired paths per strategy and scenario**, six
 - In the regime-switching scenario, volatility-aware inventory quoting raised mean P&L from **0.33** for inventory-only quoting to **2.30**, while the 5th percentile improved from **−8.85** to **−4.69**.
 - Stronger volatility defence reduced trading volume and inventory exposure and improved downside outcomes, but it did not always maximize average P&L.
 - Representative toxic, regime-switching, and stress paths passed quote, inventory, markout, interval-accounting, and terminal-accounting checks. The largest interval reconciliation error was below **3 × 10⁻¹³**, and the largest terminal residual was below **4 × 10⁻¹²**.
-- The included test suite now contains **103 passing tests**.
+- The included test suite contains **103 passing tests**.
 
 ![Toxic-market mean and tail P&L](outputs/figures/01_toxic_mean_and_tail_pnl.png)
 
@@ -149,13 +149,11 @@ Mean A–S terminal P&L in the configured runs was:
 | Regime switching | +0.52 | −8.64 | 2.59 |
 | Stress | −24.69 | −63.99 | 3.43 |
 
-The pattern matters more than any single ranking.
-
 In the high-volatility scenario, A–S had a paired mean advantage of **+2.71** over `full_adaptive`, with a bootstrap interval of **[+0.49, +5.05]**, and **+3.39** over `full_risk`, with an interval of **[+1.11, +5.66]**.
 
 Under toxic flow, the relationship reversed. A–S trailed `inventory_volatility` by **−2.27** with interval **[−4.33, −0.10]**, `full_adaptive` by **−2.94** with interval **[−4.74, −1.21]**, and `full_risk` by **−3.03** with interval **[−4.80, −1.35]**.
 
-The stress scenario shows a similar distinction between inventory control and broader defensive mechanisms. A–S improved substantially on `fixed` quoting by **+37.43** and on `inventory` quoting by **+10.02**, but it trailed `inventory_volatility` by **−17.63**, `full_adaptive` by **−23.02**, and `full_risk` by **−23.54** on the paired paths.
+The stress scenario shows a similar distinction between inventory control and broader defensive mechanisms. A–S improved on `fixed` quoting by **+37.43** and on `inventory` quoting by **+10.02**, but it trailed `inventory_volatility` by **−17.63**, `full_adaptive` by **−23.02**, and `full_risk` by **−23.54** on the paired paths.
 
 These are synthetic benchmark results, not claims that one strategy would dominate in live markets. They show that the classical A–S inventory-risk mechanism can be effective under some conditions while explicit volatility adaptation, adverse-selection defence, and hard risk controls become important under others.
 
@@ -237,7 +235,7 @@ In scenarios with coupled toxic flow, price P&L is further separated into drift,
 ├── outputs/
 │   ├── data/                          # Canonical and A-S path results
 │   ├── figures/                       # Canonical, calibration, and benchmark figures
-│   └── tables/                        # Strategy, attribution, robustness, validation, and A-S tables
+│   └── tables/                        # Strategy, attribution, robustness, validation, calibration, and A-S tables
 ├── scripts/run_all_experiments.py
 ├── src/market_maker_lab/
 │   ├── avellaneda_stoikov.py          # Finite-horizon A-S benchmark
@@ -258,7 +256,7 @@ pytest
 python scripts/run_all_experiments.py
 ```
 
-The experiment script recreates the canonical tables, A–S benchmark tables, representative path data, validation records, and generated figures with fixed seeds.
+The experiment script recreates the canonical tables, fill-probability calibration output, A–S benchmark tables, representative path data, validation records, and generated figures with fixed seeds.
 
 ## Small example
 
@@ -354,6 +352,10 @@ The simulator does not include a full limit-order book, queue position, exchange
 The toxic-flow process is deliberately stylized so that adverse selection can be isolated and traced through the accounting. The Avellaneda–Stoikov comparison is likewise a benchmark inside this synthetic environment; its parameters have not been estimated from a live venue's order-arrival process.
 
 See [`docs/limitations.md`](docs/limitations.md) for the full scope statement and [`docs/technical_notes.md`](docs/technical_notes.md) for the questions I used when reading the outputs.
+
+## Reference
+
+Avellaneda, M., & Stoikov, S. (2008). High-frequency trading in a limit order book. *Quantitative Finance*, 8(3), 217–224. https://doi.org/10.1080/14697680701381228
 
 ## License
 
