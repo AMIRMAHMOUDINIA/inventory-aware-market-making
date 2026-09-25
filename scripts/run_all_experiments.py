@@ -64,7 +64,6 @@ from market_maker_lab.validation import (
     validate_simulation_result,
 )
 
-
 FIG = ROOT / "outputs" / "figures"
 TAB = ROOT / "outputs" / "tables"
 DATA = ROOT / "outputs" / "data"
@@ -112,9 +111,7 @@ def core_experiments():
         compression="gzip",
     )
 
-    summary = summarize_strategy_results(
-        results
-    )
+    summary = summarize_strategy_results(results)
 
     summary.to_csv(
         TAB / "strategy_summary.csv",
@@ -169,9 +166,7 @@ def core_experiments():
                 }
             )
 
-    pd.DataFrame(
-        pairs
-    ).to_csv(
+    pd.DataFrame(pairs).to_csv(
         TAB / "paired_strategy_comparisons.csv",
         index=False,
     )
@@ -203,9 +198,7 @@ def core_experiments():
         index=False,
     )
 
-    stress = summary[
-        summary.scenario == "stress"
-    ].copy()
+    stress = summary[summary.scenario == "stress"].copy()
 
     stress.to_csv(
         TAB / "stress_test_summary.csv",
@@ -240,15 +233,12 @@ def avellaneda_stoikov_benchmark(
     )
 
     as_results.to_csv(
-        DATA
-        / "avellaneda_stoikov_path_results.csv.gz",
+        DATA / "avellaneda_stoikov_path_results.csv.gz",
         index=False,
         compression="gzip",
     )
 
-    as_summary = summarize_strategy_results(
-        as_results
-    )
+    as_summary = summarize_strategy_results(as_results)
 
     as_summary.to_csv(
         TAB / "avellaneda_stoikov_summary.csv",
@@ -263,15 +253,10 @@ def avellaneda_stoikov_benchmark(
         ignore_index=True,
     )
 
-    combined_summary = (
-        summarize_strategy_results(
-            combined
-        )
-    )
+    combined_summary = summarize_strategy_results(combined)
 
     combined_summary.to_csv(
-        TAB
-        / "avellaneda_stoikov_benchmark_summary.csv",
+        TAB / "avellaneda_stoikov_benchmark_summary.csv",
         index=False,
     )
 
@@ -303,21 +288,16 @@ def avellaneda_stoikov_benchmark(
             paired_rows.append(
                 {
                     "scenario": scenario,
-                    "strategy_a": (
-                        "avellaneda_stoikov"
-                    ),
+                    "strategy_a": ("avellaneda_stoikov"),
                     "strategy_b": reference,
                     **interval,
                 }
             )
 
-    paired_table = pd.DataFrame(
-        paired_rows
-    )
+    paired_table = pd.DataFrame(paired_rows)
 
     paired_table.to_csv(
-        TAB
-        / "avellaneda_stoikov_paired_comparisons.csv",
+        TAB / "avellaneda_stoikov_paired_comparisons.csv",
         index=False,
     )
 
@@ -351,22 +331,13 @@ def robustness_experiments():
             steps=140,
         )
 
-        row = (
-            summarize_strategy_results(
-                result
-            )
-            .iloc[0]
-            .to_dict()
-        )
+        row = summarize_strategy_results(result).iloc[0].to_dict()
 
         row["inventory_skew"] = skew
         rows.append(row)
 
-    pd.DataFrame(
-        rows
-    ).to_csv(
-        TAB
-        / "robustness_inventory_skew.csv",
+    pd.DataFrame(rows).to_csv(
+        TAB / "robustness_inventory_skew.csv",
         index=False,
     )
 
@@ -392,23 +363,13 @@ def robustness_experiments():
             steps=140,
         )
 
-        row = (
-            summarize_strategy_results(
-                result
-            )
-            .iloc[0]
-            .to_dict()
-        )
+        row = summarize_strategy_results(result).iloc[0].to_dict()
 
-        row[
-            "volatility_sensitivity"
-        ] = sensitivity
+        row["volatility_sensitivity"] = sensitivity
 
         rows.append(row)
 
-    pd.DataFrame(
-        rows
-    ).to_csv(
+    pd.DataFrame(rows).to_csv(
         TAB / "robustness_volatility.csv",
         index=False,
     )
@@ -436,23 +397,13 @@ def robustness_experiments():
             steps=140,
         )
 
-        row = (
-            summarize_strategy_results(
-                result
-            )
-            .iloc[0]
-            .to_dict()
-        )
+        row = summarize_strategy_results(result).iloc[0].to_dict()
 
-        row[
-            "toxicity_sensitivity"
-        ] = sensitivity
+        row["toxicity_sensitivity"] = sensitivity
 
         rows.append(row)
 
-    pd.DataFrame(
-        rows
-    ).to_csv(
+    pd.DataFrame(rows).to_csv(
         TAB / "robustness_toxicity.csv",
         index=False,
     )
@@ -488,20 +439,13 @@ def robustness_experiments():
                 {
                     "inventory_skew": skew,
                     "order_size": size,
-                    "mean_terminal_pnl": (
-                        result.terminal_pnl.mean()
-                    ),
-                    "mean_absolute_inventory": (
-                        result.mean_absolute_inventory.mean()
-                    ),
+                    "mean_terminal_pnl": (result.terminal_pnl.mean()),
+                    "mean_absolute_inventory": (result.mean_absolute_inventory.mean()),
                 }
             )
 
-    pd.DataFrame(
-        grid
-    ).to_csv(
-        TAB
-        / "robustness_interaction_grid.csv",
+    pd.DataFrame(grid).to_csv(
+        TAB / "robustness_interaction_grid.csv",
         index=False,
     )
 
@@ -527,19 +471,13 @@ def robustness_experiments():
             strategy = build_strategy(
                 spec,
                 1 / steps,
-                SCENARIOS[
-                    "stress"
-                ].volatility,
+                SCENARIOS["stress"].volatility,
             )
 
             limits = RiskLimits(
-                soft_position_limit=(
-                    0.65 * hard_limit
-                ),
+                soft_position_limit=(0.65 * hard_limit),
                 hard_position_limit=hard_limit,
-                recovery_position_limit=(
-                    0.3 * hard_limit
-                ),
+                recovery_position_limit=(0.3 * hard_limit),
                 maximum_loss=18,
                 maximum_drawdown=14,
                 maximum_absolute_price_jump=0.65,
@@ -548,58 +486,42 @@ def robustness_experiments():
                 liquidate_on_halt=True,
             )
 
-            risk = MarketMakerRiskManager(
-                limits
+            risk = MarketMakerRiskManager(limits)
+
+            execution = AggressiveExecutionConfig(
+                0.05,
+                0.002,
+                0.0008,
             )
 
-            execution = (
-                AggressiveExecutionConfig(
-                    0.05,
-                    0.002,
-                    0.0008,
-                )
-            )
-
-            result = (
-                run_market_making_simulation(
-                    SimulationConfig(
-                        number_of_steps=steps,
-                        seed=seed,
-                    ),
-                    strategy,
-                    coupled_market_model=(
-                        build_scenario_model(
-                            "stress",
-                            steps,
-                        )
-                    ),
-                    risk_manager=risk,
-                    aggressive_execution_config=(
-                        execution
-                    ),
-                )
+            result = run_market_making_simulation(
+                SimulationConfig(
+                    number_of_steps=steps,
+                    seed=seed,
+                ),
+                strategy,
+                coupled_market_model=(
+                    build_scenario_model(
+                        "stress",
+                        steps,
+                    )
+                ),
+                risk_manager=risk,
+                aggressive_execution_config=(execution),
             )
 
             risk_rows.append(
                 {
-                    "hard_position_limit": (
-                        hard_limit
-                    ),
+                    "hard_position_limit": (hard_limit),
                     "path_id": path_id,
-                    **summarize_simulation(
-                        result
-                    ),
+                    **summarize_simulation(result),
                 }
             )
 
-    risk_results = pd.DataFrame(
-        risk_rows
-    )
+    risk_results = pd.DataFrame(risk_rows)
 
     (
-        risk_results.groupby(
-            "hard_position_limit"
-        )
+        risk_results.groupby("hard_position_limit")
         .agg(
             mean_terminal_pnl=(
                 "terminal_pnl",
@@ -607,9 +529,7 @@ def robustness_experiments():
             ),
             pnl_5_percentile=(
                 "terminal_pnl",
-                lambda x: x.quantile(
-                    0.05
-                ),
+                lambda x: x.quantile(0.05),
             ),
             mean_maximum_inventory=(
                 "maximum_absolute_inventory",
@@ -626,8 +546,7 @@ def robustness_experiments():
         )
         .reset_index()
         .to_csv(
-            TAB
-            / "robustness_risk_limits.csv",
+            TAB / "robustness_risk_limits.csv",
             index=False,
         )
     )
@@ -671,11 +590,7 @@ def representative_outputs():
             steps=250,
         )
 
-        if (
-            result.permanently_halted
-            or result.forced_reduction_count
-            > 0
-        ):
+        if result.permanently_halted or result.forced_reduction_count > 0:
             chosen[
                 (
                     "stress",
@@ -697,69 +612,32 @@ def representative_outputs():
         strategy,
     ), result in chosen.items():
         result.intervals.to_csv(
-            DATA
-            / (
-                f"representative_"
-                f"{scenario}_"
-                f"{strategy}_"
-                f"intervals.csv"
-            ),
+            DATA / (f"representative_" f"{scenario}_" f"{strategy}_" f"intervals.csv"),
             index=False,
         )
 
         result.trades.to_csv(
-            DATA
-            / (
-                f"representative_"
-                f"{scenario}_"
-                f"{strategy}_"
-                f"trades.csv"
-            ),
+            DATA / (f"representative_" f"{scenario}_" f"{strategy}_" f"trades.csv"),
             index=False,
         )
 
         if not result.risk_events.empty:
             result.risk_events.to_csv(
                 DATA
-                / (
-                    f"representative_"
-                    f"{scenario}_"
-                    f"{strategy}_"
-                    f"risk_events.csv"
-                ),
+                / (f"representative_" f"{scenario}_" f"{strategy}_" f"risk_events.csv"),
                 index=False,
             )
 
-        attribution_table(
-            attribute_market_making_pnl(
-                result
-            )
-        ).to_csv(
-            TAB
-            / (
-                f"attribution_"
-                f"{scenario}_"
-                f"{strategy}.csv"
-            ),
+        attribution_table(attribute_market_making_pnl(result)).to_csv(
+            TAB / (f"attribution_" f"{scenario}_" f"{strategy}.csv"),
             index=False,
         )
 
         validate_simulation_result(
             result,
-            (
-                28
-                if strategy == "full_risk"
-                else None
-            ),
-        ).to_frame(
-            "value"
-        ).to_csv(
-            TAB
-            / (
-                f"validation_"
-                f"{scenario}_"
-                f"{strategy}.csv"
-            )
+            (28 if strategy == "full_risk" else None),
+        ).to_frame("value").to_csv(
+            TAB / (f"validation_" f"{scenario}_" f"{strategy}.csv")
         )
 
     toxic = chosen[
@@ -779,8 +657,7 @@ def representative_outputs():
             50,
         ),
     ).to_csv(
-        TAB
-        / "markout_curve_toxic_fixed.csv",
+        TAB / "markout_curve_toxic_fixed.csv",
         index=False,
     )
 
@@ -845,13 +722,9 @@ def build_fill_probability_calibration_table(
         ]
     ).copy()
 
-    fills = fills[
-        fills["distance"] >= 0
-    ].copy()
+    fills = fills[fills["distance"] >= 0].copy()
 
-    fills["filled"] = (
-        fills["fill_quantity"] > 0
-    )
+    fills["filled"] = fills["fill_quantity"] > 0
 
     fills["distance_bin"] = pd.qcut(
         fills["distance"],
@@ -893,9 +766,7 @@ def build_fill_probability_calibration_table(
             ],
             kind="mergesort",
         )
-        .reset_index(
-            drop=True
-        )
+        .reset_index(drop=True)
     )
 
     return fill_curve
@@ -911,21 +782,14 @@ def fill_probability_calibration_figure() -> None:
         steps=250,
     )
 
-    fill_curve = (
-        build_fill_probability_calibration_table(
-            result.intervals
-        )
-    )
+    fill_curve = build_fill_probability_calibration_table(result.intervals)
 
     fill_curve.to_csv(
-        TAB
-        / "fill_probability_calibration.csv",
+        TAB / "fill_probability_calibration.csv",
         index=False,
     )
 
-    fig, ax = plt.subplots(
-        figsize=(8, 5)
-    )
+    fig, ax = plt.subplots(figsize=(8, 5))
 
     for side, group in fill_curve.groupby(
         "side",
@@ -938,25 +802,18 @@ def fill_probability_calibration_figure() -> None:
             label=side,
         )
 
-    ax.set_xlabel(
-        "Mean quote distance from mid"
-    )
+    ax.set_xlabel("Mean quote distance from mid")
 
-    ax.set_ylabel(
-        "Observed fill probability per interval"
-    )
+    ax.set_ylabel("Observed fill probability per interval")
 
-    ax.set_title(
-        "Fill Probability versus Quote Distance"
-    )
+    ax.set_title("Fill Probability versus Quote Distance")
 
     ax.legend()
 
     fig.tight_layout()
 
     fig.savefig(
-        FIG
-        / "10_fill_probability_calibration.png",
+        FIG / "10_fill_probability_calibration.png",
         dpi=180,
         bbox_inches="tight",
     )
@@ -981,23 +838,17 @@ def figures(
     ]
 
     toxic = (
-        summary[
-            summary.scenario == "toxic"
-        ]
+        summary[summary.scenario == "toxic"]
         .set_index("strategy")
         .loc[order]
         .reset_index()
     )
 
-    x = np.arange(
-        len(toxic)
-    )
+    x = np.arange(len(toxic))
 
     width = 0.36
 
-    plt.figure(
-        figsize=(10, 6)
-    )
+    plt.figure(figsize=(10, 6))
 
     plt.bar(
         x - width / 2,
@@ -1025,23 +876,15 @@ def figures(
         ha="right",
     )
 
-    plt.ylabel(
-        "Terminal P&L"
-    )
+    plt.ylabel("Terminal P&L")
 
-    plt.title(
-        "Toxic Market: Mean and Downside P&L"
-    )
+    plt.title("Toxic Market: Mean and Downside P&L")
 
     plt.legend()
 
-    save(
-        "01_toxic_mean_and_tail_pnl.png"
-    )
+    save("01_toxic_mean_and_tail_pnl.png")
 
-    plt.figure(
-        figsize=(10, 6)
-    )
+    plt.figure(figsize=(10, 6))
 
     for strategy in (
         "fixed",
@@ -1050,14 +893,7 @@ def figures(
         "full_risk",
     ):
         values = results[
-            (
-                results.scenario
-                == "toxic"
-            )
-            & (
-                results.strategy
-                == strategy
-            )
+            (results.scenario == "toxic") & (results.strategy == strategy)
         ].terminal_pnl
 
         plt.hist(
@@ -1072,32 +908,19 @@ def figures(
         linewidth=1,
     )
 
-    plt.xlabel(
-        "Terminal P&L"
-    )
+    plt.xlabel("Terminal P&L")
 
-    plt.ylabel(
-        "Path count"
-    )
+    plt.ylabel("Path count")
 
-    plt.title(
-        "Toxic-Market P&L Distributions"
-    )
+    plt.title("Toxic-Market P&L Distributions")
 
     plt.legend()
 
-    save(
-        "02_toxic_pnl_distributions.png"
-    )
+    save("02_toxic_pnl_distributions.png")
 
-    one_sided = summary[
-        summary.scenario
-        == "one_sided"
-    ]
+    one_sided = summary[summary.scenario == "one_sided"]
 
-    plt.figure(
-        figsize=(9, 6)
-    )
+    plt.figure(figsize=(9, 6))
 
     plt.bar(
         one_sided.strategy,
@@ -1109,17 +932,11 @@ def figures(
         ha="right",
     )
 
-    plt.ylabel(
-        "Mean absolute inventory"
-    )
+    plt.ylabel("Mean absolute inventory")
 
-    plt.title(
-        "Inventory Exposure under One-Sided Flow"
-    )
+    plt.title("Inventory Exposure under One-Sided Flow")
 
-    save(
-        "03_inventory_exposure.png"
-    )
+    save("03_inventory_exposure.png")
 
     selected = [
         "fixed",
@@ -1129,12 +946,7 @@ def figures(
     ]
 
     selected_attribution = (
-        attribution[
-            attribution.scenario
-            == "toxic"
-        ]
-        .set_index("strategy")
-        .loc[selected]
+        attribution[attribution.scenario == "toxic"].set_index("strategy").loc[selected]
     )
 
     components = [
@@ -1155,25 +967,15 @@ def figures(
         "Terminal",
     ]
 
-    x = np.arange(
-        len(components)
-    )
+    x = np.arange(len(components))
 
     width = 0.18
 
-    plt.figure(
-        figsize=(10, 6)
-    )
+    plt.figure(figsize=(10, 6))
 
-    for index, strategy_name in enumerate(
-        selected
-    ):
+    for index, strategy_name in enumerate(selected):
         plt.bar(
-            x
-            + (
-                index - 1.5
-            )
-            * width,
+            x + (index - 1.5) * width,
             selected_attribution.loc[
                 strategy_name,
                 components,
@@ -1193,30 +995,17 @@ def figures(
         rotation=20,
     )
 
-    plt.ylabel(
-        "Mean P&L contribution"
-    )
+    plt.ylabel("Mean P&L contribution")
 
-    plt.title(
-        "Toxic-Market Mean P&L Attribution"
-    )
+    plt.title("Toxic-Market Mean P&L Attribution")
 
-    plt.legend(
-        fontsize=8
-    )
+    plt.legend(fontsize=8)
 
-    save(
-        "04_pnl_attribution.png"
-    )
+    save("04_pnl_attribution.png")
 
-    curve = pd.read_csv(
-        TAB
-        / "markout_curve_toxic_fixed.csv"
-    )
+    curve = pd.read_csv(TAB / "markout_curve_toxic_fixed.csv")
 
-    plt.figure(
-        figsize=(8, 5)
-    )
+    plt.figure(figsize=(8, 5))
 
     plt.plot(
         curve.horizon_steps,
@@ -1237,23 +1026,15 @@ def figures(
         linewidth=1,
     )
 
-    plt.xlabel(
-        "Horizon (steps)"
-    )
+    plt.xlabel("Horizon (steps)")
 
-    plt.ylabel(
-        "P&L per unit"
-    )
+    plt.ylabel("P&L per unit")
 
-    plt.title(
-        "Fixed-Strategy Markout Curve in Toxic Flow"
-    )
+    plt.title("Fixed-Strategy Markout Curve in Toxic Flow")
 
     plt.legend()
 
-    save(
-        "05_markout_curve.png"
-    )
+    save("05_markout_curve.png")
 
     regime = chosen[
         (
@@ -1262,9 +1043,7 @@ def figures(
         )
     ].intervals
 
-    plt.figure(
-        figsize=(10, 6)
-    )
+    plt.figure(figsize=(10, 6))
 
     plt.plot(
         regime.time_start,
@@ -1284,19 +1063,13 @@ def figures(
         label="Target half-spread",
     )
 
-    plt.xlabel(
-        "Time"
-    )
+    plt.xlabel("Time")
 
-    plt.title(
-        "Volatility Estimation and Quote-Width Response"
-    )
+    plt.title("Volatility Estimation and Quote-Width Response")
 
     plt.legend()
 
-    save(
-        "06_volatility_response.png"
-    )
+    save("06_volatility_response.png")
 
     stress = chosen[
         (
@@ -1313,43 +1086,26 @@ def figures(
         "halted": 4,
     }
 
-    plt.figure(
-        figsize=(10, 5)
-    )
+    plt.figure(figsize=(10, 5))
 
     plt.step(
         stress.time_start,
-        stress.risk_state.map(
-            mapping
-        ),
+        stress.risk_state.map(mapping),
         where="post",
     )
 
     plt.yticks(
-        list(
-            mapping.values()
-        ),
-        list(
-            mapping.keys()
-        ),
+        list(mapping.values()),
+        list(mapping.keys()),
     )
 
-    plt.xlabel(
-        "Time"
-    )
+    plt.xlabel("Time")
 
-    plt.title(
-        "Risk-State Timeline in Stress Scenario"
-    )
+    plt.title("Risk-State Timeline in Stress Scenario")
 
-    save(
-        "07_risk_state_timeline.png"
-    )
+    save("07_risk_state_timeline.png")
 
-    grid = pd.read_csv(
-        TAB
-        / "robustness_interaction_grid.csv"
-    )
+    grid = pd.read_csv(TAB / "robustness_interaction_grid.csv")
 
     pivot = grid.pivot(
         index="inventory_skew",
@@ -1357,9 +1113,7 @@ def figures(
         values="mean_terminal_pnl",
     )
 
-    plt.figure(
-        figsize=(8, 5)
-    )
+    plt.figure(figsize=(8, 5))
 
     image = plt.imshow(
         pivot.to_numpy(),
@@ -1368,43 +1122,27 @@ def figures(
     )
 
     plt.xticks(
-        range(
-            len(
-                pivot.columns
-            )
-        ),
+        range(len(pivot.columns)),
         pivot.columns,
     )
 
     plt.yticks(
-        range(
-            len(
-                pivot.index
-            )
-        ),
+        range(len(pivot.index)),
         pivot.index,
     )
 
-    plt.xlabel(
-        "Order size"
-    )
+    plt.xlabel("Order size")
 
-    plt.ylabel(
-        "Inventory skew"
-    )
+    plt.ylabel("Inventory skew")
 
-    plt.title(
-        "One-Sided-Flow Mean P&L Robustness"
-    )
+    plt.title("One-Sided-Flow Mean P&L Robustness")
 
     plt.colorbar(
         image,
         label="Mean terminal P&L",
     )
 
-    save(
-        "08_robustness_heatmap.png"
-    )
+    save("08_robustness_heatmap.png")
 
     half_spreads = np.linspace(
         0.005,
@@ -1419,8 +1157,7 @@ def figures(
                 90,
                 18,
             )
-            for value
-            in half_spreads
+            for value in half_spreads
         ]
     )
 
@@ -1431,14 +1168,11 @@ def figures(
                 90,
                 18,
             )
-            for value
-            in half_spreads
+            for value in half_spreads
         ]
     )
 
-    plt.figure(
-        figsize=(8, 5)
-    )
+    plt.figure(figsize=(8, 5))
 
     plt.plot(
         half_spreads,
@@ -1452,19 +1186,13 @@ def figures(
         label="Gross spread revenue rate",
     )
 
-    plt.xlabel(
-        "Half-spread"
-    )
+    plt.xlabel("Half-spread")
 
-    plt.title(
-        "Quote Width, Fill Intensity, and Gross Revenue"
-    )
+    plt.title("Quote Width, Fill Intensity, and Gross Revenue")
 
     plt.legend()
 
-    save(
-        "09_fixed_spread_tradeoff.png"
-    )
+    save("09_fixed_spread_tradeoff.png")
 
 
 def avellaneda_stoikov_figure(
@@ -1506,11 +1234,7 @@ def avellaneda_stoikov_figure(
     ]
 
     regular_table = (
-        benchmark_summary[
-            benchmark_summary.strategy.isin(
-                regular_strategies
-            )
-        ]
+        benchmark_summary[benchmark_summary.strategy.isin(regular_strategies)]
         .pivot(
             index="scenario",
             columns="strategy",
@@ -1522,39 +1246,20 @@ def avellaneda_stoikov_figure(
         )
     )
 
-    x = np.arange(
-        len(regular_scenarios)
-    )
+    x = np.arange(len(regular_scenarios))
 
     width = 0.20
 
-    plt.figure(
-        figsize=(11, 6)
-    )
+    plt.figure(figsize=(11, 6))
 
-    for index, strategy in enumerate(
-        regular_strategies
-    ):
-        offset = (
-            index
-            - (
-                len(
-                    regular_strategies
-                )
-                - 1
-            )
-            / 2
-        ) * width
+    for index, strategy in enumerate(regular_strategies):
+        offset = (index - (len(regular_strategies) - 1) / 2) * width
 
         plt.bar(
             x + offset,
-            regular_table[
-                strategy
-            ].to_numpy(),
+            regular_table[strategy].to_numpy(),
             width,
-            label=strategy_labels[
-                strategy
-            ],
+            label=strategy_labels[strategy],
         )
 
     plt.axhline(
@@ -1564,32 +1269,18 @@ def avellaneda_stoikov_figure(
 
     plt.xticks(
         x,
-        [
-            scenario_labels[
-                scenario
-            ]
-            for scenario
-            in regular_scenarios
-        ],
+        [scenario_labels[scenario] for scenario in regular_scenarios],
         rotation=20,
         ha="right",
     )
 
-    plt.ylabel(
-        "Mean terminal P&L"
-    )
+    plt.ylabel("Mean terminal P&L")
 
-    plt.title(
-        "Avellaneda-Stoikov Benchmark on Paired Synthetic Paths"
-    )
+    plt.title("Avellaneda-Stoikov Benchmark on Paired Synthetic Paths")
 
-    plt.legend(
-        fontsize=8
-    )
+    plt.legend(fontsize=8)
 
-    save(
-        "11_avellaneda_stoikov_benchmark.png"
-    )
+    save("11_avellaneda_stoikov_benchmark.png")
 
     stress_strategies = [
         "fixed",
@@ -1602,39 +1293,20 @@ def avellaneda_stoikov_figure(
 
     stress_table = (
         benchmark_summary[
-            (
-                benchmark_summary.scenario
-                == "stress"
-            )
-            & (
-                benchmark_summary.strategy.isin(
-                    stress_strategies
-                )
-            )
+            (benchmark_summary.scenario == "stress")
+            & (benchmark_summary.strategy.isin(stress_strategies))
         ]
-        .set_index(
-            "strategy"
-        )
-        .reindex(
-            stress_strategies
-        )
+        .set_index("strategy")
+        .reindex(stress_strategies)
     )
 
-    x = np.arange(
-        len(
-            stress_strategies
-        )
-    )
+    x = np.arange(len(stress_strategies))
 
-    plt.figure(
-        figsize=(11, 6)
-    )
+    plt.figure(figsize=(11, 6))
 
     plt.bar(
         x,
-        stress_table[
-            "mean_terminal_pnl"
-        ].to_numpy(),
+        stress_table["mean_terminal_pnl"].to_numpy(),
     )
 
     plt.axhline(
@@ -1644,28 +1316,16 @@ def avellaneda_stoikov_figure(
 
     plt.xticks(
         x,
-        [
-            strategy_labels[
-                strategy
-            ]
-            for strategy
-            in stress_strategies
-        ],
+        [strategy_labels[strategy] for strategy in stress_strategies],
         rotation=25,
         ha="right",
     )
 
-    plt.ylabel(
-        "Mean terminal P&L"
-    )
+    plt.ylabel("Mean terminal P&L")
 
-    plt.title(
-        "Strategy Comparison under the Stress Scenario"
-    )
+    plt.title("Strategy Comparison under the Stress Scenario")
 
-    save(
-        "12_avellaneda_stoikov_stress.png"
-    )
+    save("12_avellaneda_stoikov_stress.png")
 
 
 def validation_summary(
@@ -1677,16 +1337,9 @@ def validation_summary(
         scenario,
         strategy,
     ), result in chosen.items():
-        validation = (
-            validate_simulation_result(
-                result,
-                (
-                    28
-                    if strategy
-                    == "full_risk"
-                    else None
-                ),
-            )
+        validation = validate_simulation_result(
+            result,
+            (28 if strategy == "full_risk" else None),
         )
 
         rows.append(
@@ -1697,11 +1350,8 @@ def validation_summary(
             }
         )
 
-    pd.DataFrame(
-        rows
-    ).to_csv(
-        TAB
-        / "validation_summary.csv",
+    pd.DataFrame(rows).to_csv(
+        TAB / "validation_summary.csv",
         index=False,
     )
 
@@ -1718,15 +1368,11 @@ def main():
         as_summary,
         benchmark_summary,
         paired_table,
-    ) = avellaneda_stoikov_benchmark(
-        results
-    )
+    ) = avellaneda_stoikov_benchmark(results)
 
     robustness_experiments()
 
-    chosen = (
-        representative_outputs()
-    )
+    chosen = representative_outputs()
 
     figures(
         results,
@@ -1737,27 +1383,15 @@ def main():
 
     fill_probability_calibration_figure()
 
-    avellaneda_stoikov_figure(
-        benchmark_summary
-    )
+    avellaneda_stoikov_figure(benchmark_summary)
 
-    validation_summary(
-        chosen
-    )
+    validation_summary(chosen)
 
-    print(
-        f"Generated {len(results):,} "
-        "canonical paired path-strategy records."
-    )
+    print(f"Generated {len(results):,} " "canonical paired path-strategy records.")
 
-    print(
-        f"Generated {len(as_results):,} "
-        "Avellaneda-Stoikov benchmark records."
-    )
+    print(f"Generated {len(as_results):,} " "Avellaneda-Stoikov benchmark records.")
 
-    print(
-        "\nCanonical five-strategy summary:"
-    )
+    print("\nCanonical five-strategy summary:")
 
     print(
         summary[
@@ -1768,14 +1402,10 @@ def main():
                 "pnl_5_percentile",
                 "mean_markout_per_unit",
             ]
-        ].to_string(
-            index=False
-        )
+        ].to_string(index=False)
     )
 
-    print(
-        "\nAvellaneda-Stoikov summary:"
-    )
+    print("\nAvellaneda-Stoikov summary:")
 
     print(
         as_summary[
@@ -1788,15 +1418,10 @@ def main():
                 "mean_maximum_inventory",
                 "mean_markout_per_unit",
             ]
-        ].to_string(
-            index=False
-        )
+        ].to_string(index=False)
     )
 
-    print(
-        "\nA-S paired comparisons generated:"
-        f" {len(paired_table)}"
-    )
+    print("\nA-S paired comparisons generated:" f" {len(paired_table)}")
 
 
 if __name__ == "__main__":
