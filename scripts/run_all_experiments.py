@@ -787,6 +787,183 @@ def representative_outputs():
     return chosen
 
 
+def build_fill_probability_calibration_table(
+    intervals: pd.DataFrame,
+) -> pd.DataFrame:
+    """Aggregate observed fill rates by quote-distance bin and side."""
+
+    bid = intervals[
+        [
+            "bid_distance",
+            "bid_fill_quantity",
+        ]
+    ].rename(
+        columns={
+            "bid_distance": "distance",
+            "bid_fill_quantity": "fill_quantity",
+        }
+    )
+
+    bid["side"] = "bid"
+
+    ask = intervals[
+        [
+            "ask_distance",
+            "ask_fill_quantity",
+        ]
+    ].rename(
+        columns={
+            "ask_distance": "distance",
+            "ask_fill_quantity": "fill_quantity",
+        }
+    )
+
+    ask["side"] = "ask"
+
+    fills = pd.concat(
+        [
+            bid,
+            ask,
+        ],
+        ignore_index=True,
+    )
+
+    fills["distance"] = pd.to_numeric(
+        fills["distance"],
+        errors="coerce",
+    )
+
+    fills["fill_quantity"] = pd.to_numeric(
+        fills["fill_quantity"],
+        errors="coerce",
+    )
+
+    fills = fills.dropna(
+        subset=[
+            "distance",
+            "fill_quantity",
+        ]
+    ).copy()
+
+    fills = fills[
+        fills["distance"] >= 0
+    ].copy()
+
+    fills["filled"] = (
+        fills["fill_quantity"] > 0
+    )
+
+    fills["distance_bin"] = pd.qcut(
+        fills["distance"],
+        q=6,
+        duplicates="drop",
+    )
+
+    fill_curve = (
+        fills.groupby(
+            [
+                "side",
+                "distance_bin",
+            ],
+            observed=True,
+        )
+        .agg(
+            mean_distance=(
+                "distance",
+                "mean",
+            ),
+            fill_probability=(
+                "filled",
+                "mean",
+            ),
+            mean_quantity=(
+                "fill_quantity",
+                "mean",
+            ),
+            observations=(
+                "filled",
+                "size",
+            ),
+        )
+        .reset_index()
+        .sort_values(
+            [
+                "side",
+                "mean_distance",
+            ],
+            kind="mergesort",
+        )
+        .reset_index(
+            drop=True
+        )
+    )
+
+    return fill_curve
+
+
+def fill_probability_calibration_figure() -> None:
+    """Reproduce the notebook fill-probability calibration diagnostic."""
+
+    result = run_path(
+        "clean",
+        DEFAULT_STRATEGIES[3],
+        50123,
+        steps=250,
+    )
+
+    fill_curve = (
+        build_fill_probability_calibration_table(
+            result.intervals
+        )
+    )
+
+    fill_curve.to_csv(
+        TAB
+        / "fill_probability_calibration.csv",
+        index=False,
+    )
+
+    fig, ax = plt.subplots(
+        figsize=(8, 5)
+    )
+
+    for side, group in fill_curve.groupby(
+        "side",
+        sort=True,
+    ):
+        ax.plot(
+            group["mean_distance"],
+            group["fill_probability"],
+            marker="o",
+            label=side,
+        )
+
+    ax.set_xlabel(
+        "Mean quote distance from mid"
+    )
+
+    ax.set_ylabel(
+        "Observed fill probability per interval"
+    )
+
+    ax.set_title(
+        "Fill Probability versus Quote Distance"
+    )
+
+    ax.legend()
+
+    fig.tight_layout()
+
+    fig.savefig(
+        FIG
+        / "10_fill_probability_calibration.png",
+        dpi=180,
+        bbox_inches="tight",
+    )
+
+    plt.close(fig)
+
+
 def figures(
     results,
     summary,
@@ -1557,6 +1734,8 @@ def main():
         attribution,
         chosen,
     )
+
+    fill_probability_calibration_figure()
 
     avellaneda_stoikov_figure(
         benchmark_summary
