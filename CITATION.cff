@@ -5,6 +5,6 @@ type: software
 authors:
   - family-names: Mahmoudinia
     given-names: Amir
-version: 1.0.0
-date-released: 2026-06-18
+version: "1.1.0"
+date-released: "2026-09-26"
 license: MIT

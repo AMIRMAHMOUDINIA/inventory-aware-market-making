@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "inventory-aware-market-making"
-version = "1.0.0"
+version = "1.1.0"
 description = "Event-driven market-making simulator with inventory, volatility, adverse-selection, risk-control, and P&L attribution modules."
 readme = "README.md"
 requires-python = ">=3.11"
