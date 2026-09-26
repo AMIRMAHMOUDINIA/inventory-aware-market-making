@@ -1,20 +1,29 @@
 """Online volatility estimators."""
+
 from __future__ import annotations
+
 from dataclasses import dataclass, field
 from math import isfinite, sqrt
+
 
 @dataclass
 class ConstantVolatilityEstimator:
     volatility: float
+
     def __post_init__(self) -> None:
         if not isfinite(self.volatility) or self.volatility < 0:
             raise ValueError("Volatility must be finite and non-negative.")
-    def reset(self) -> None: pass
+
+    def reset(self) -> None:
+        pass
+
     def update(self, mid_price: float, time: float) -> float:
         return self.volatility
+
     @property
     def current_volatility(self) -> float:
         return self.volatility
+
 
 @dataclass
 class EWMAAbsoluteVolatilityEstimator:
@@ -31,7 +40,10 @@ class EWMAAbsoluteVolatilityEstimator:
             raise ValueError("Decay must lie in [0, 1).")
         if self.initial_volatility < 0 or self.minimum_volatility < 0:
             raise ValueError("Volatilities cannot be negative.")
-        if self.maximum_volatility is not None and self.maximum_volatility < self.minimum_volatility:
+        if (
+            self.maximum_volatility is not None
+            and self.maximum_volatility < self.minimum_volatility
+        ):
             raise ValueError("Maximum volatility is below minimum.")
         self.reset()
 
@@ -56,7 +68,7 @@ class EWMAAbsoluteVolatilityEstimator:
         dt = time - float(self._last_time)
         if dt <= 0:
             raise ValueError("Observation times must increase.")
-        inst_var = (mid_price - self._last_price)**2 / dt
+        inst_var = (mid_price - self._last_price) ** 2 / dt
         vol = sqrt(max(self.decay * self._variance + (1 - self.decay) * inst_var, 0.0))
         vol = max(vol, self.minimum_volatility)
         if self.maximum_volatility is not None:

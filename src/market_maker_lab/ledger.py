@@ -1,8 +1,12 @@
 """Cash and inventory accounting."""
+
 from __future__ import annotations
+
 from dataclasses import dataclass
 from math import isfinite
+
 from .market_primitives import Trade
+
 
 @dataclass
 class MarketMakerLedger:

@@ -114,10 +114,7 @@ def build_risk_manager(
         0.0008,
     )
 
-    if (
-        not spec.risk_controlled
-        and spec.name != "full_risk"
-    ):
+    if not spec.risk_controlled and spec.name != "full_risk":
         return None, execution
 
     limits = RiskLimits(

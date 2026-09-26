@@ -79,10 +79,7 @@ def test_optimal_half_spread_matches_formula() -> None:
     tau = 1.0
     k = 18.0
 
-    expected = (
-        0.5 * gamma * sigma**2 * tau
-        + log1p(gamma / k) / gamma
-    )
+    expected = 0.5 * gamma * sigma**2 * tau + log1p(gamma / k) / gamma
 
     result = optimal_half_spread(
         risk_aversion=gamma,
@@ -124,9 +121,7 @@ def test_zero_inventory_produces_symmetric_quote() -> None:
 
     assert quote.bid == pytest.approx(99.94)
     assert quote.ask == pytest.approx(100.06)
-    assert 100.0 - quote.bid == pytest.approx(
-        quote.ask - 100.0
-    )
+    assert 100.0 - quote.bid == pytest.approx(quote.ask - 100.0)
 
 
 def test_positive_inventory_shifts_quotes_down() -> None:
@@ -140,14 +135,10 @@ def test_positive_inventory_shifts_quotes_down() -> None:
 
     diagnostics = strategy.diagnostics()
 
-    assert diagnostics["reservation_price"] == pytest.approx(
-        99.97
-    )
+    assert diagnostics["reservation_price"] == pytest.approx(99.97)
     assert quote.bid < 99.94
     assert quote.ask < 100.06
-    assert diagnostics["as_bid_distance"] > (
-        diagnostics["as_ask_distance"]
-    )
+    assert diagnostics["as_bid_distance"] > (diagnostics["as_ask_distance"])
 
 
 def test_negative_inventory_shifts_quotes_up() -> None:
@@ -161,14 +152,10 @@ def test_negative_inventory_shifts_quotes_up() -> None:
 
     diagnostics = strategy.diagnostics()
 
-    assert diagnostics["reservation_price"] == pytest.approx(
-        100.03
-    )
+    assert diagnostics["reservation_price"] == pytest.approx(100.03)
     assert quote.bid > 99.94
     assert quote.ask > 100.06
-    assert diagnostics["as_bid_distance"] < (
-        diagnostics["as_ask_distance"]
-    )
+    assert diagnostics["as_bid_distance"] < (diagnostics["as_ask_distance"])
 
 
 def test_passive_constraint_clips_marketable_side() -> None:

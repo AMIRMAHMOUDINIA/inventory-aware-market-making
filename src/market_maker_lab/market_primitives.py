@@ -1,10 +1,13 @@
 """Core quote and trade objects."""
+
 from __future__ import annotations
+
 from dataclasses import dataclass
 from math import ceil, floor, isfinite
 from typing import Literal
 
 TradeSide = Literal["buy", "sell"]
+
 
 @dataclass(frozen=True)
 class Quote:
@@ -25,9 +28,11 @@ class Quote:
     def half_spread(self) -> float:
         return 0.5 * self.spread
 
+
 @dataclass(frozen=True)
 class Trade:
     """Trade from the market maker's perspective."""
+
     time: float
     side: TradeSide
     price: float

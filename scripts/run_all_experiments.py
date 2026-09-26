@@ -612,33 +612,30 @@ def representative_outputs():
         strategy,
     ), result in chosen.items():
         result.intervals.to_csv(
-            DATA / (f"representative_" f"{scenario}_" f"{strategy}_" f"intervals.csv"),
+            DATA / (f"representative_{scenario}_{strategy}_intervals.csv"),
             index=False,
         )
 
         result.trades.to_csv(
-            DATA / (f"representative_" f"{scenario}_" f"{strategy}_" f"trades.csv"),
+            DATA / (f"representative_{scenario}_{strategy}_trades.csv"),
             index=False,
         )
 
         if not result.risk_events.empty:
             result.risk_events.to_csv(
-                DATA
-                / (f"representative_" f"{scenario}_" f"{strategy}_" f"risk_events.csv"),
+                DATA / (f"representative_{scenario}_{strategy}_risk_events.csv"),
                 index=False,
             )
 
         attribution_table(attribute_market_making_pnl(result)).to_csv(
-            TAB / (f"attribution_" f"{scenario}_" f"{strategy}.csv"),
+            TAB / (f"attribution_{scenario}_{strategy}.csv"),
             index=False,
         )
 
         validate_simulation_result(
             result,
             (28 if strategy == "full_risk" else None),
-        ).to_frame("value").to_csv(
-            TAB / (f"validation_" f"{scenario}_" f"{strategy}.csv")
-        )
+        ).to_frame("value").to_csv(TAB / (f"validation_{scenario}_{strategy}.csv"))
 
     toxic = chosen[
         (
@@ -1387,9 +1384,9 @@ def main():
 
     validation_summary(chosen)
 
-    print(f"Generated {len(results):,} " "canonical paired path-strategy records.")
+    print(f"Generated {len(results):,} canonical paired path-strategy records.")
 
-    print(f"Generated {len(as_results):,} " "Avellaneda-Stoikov benchmark records.")
+    print(f"Generated {len(as_results):,} Avellaneda-Stoikov benchmark records.")
 
     print("\nCanonical five-strategy summary:")
 
@@ -1421,7 +1418,7 @@ def main():
         ].to_string(index=False)
     )
 
-    print("\nA-S paired comparisons generated:" f" {len(paired_table)}")
+    print(f"\nA-S paired comparisons generated: {len(paired_table)}")
 
 
 if __name__ == "__main__":

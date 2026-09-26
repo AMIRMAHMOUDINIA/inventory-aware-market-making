@@ -49,11 +49,7 @@ def reservation_price(
         raise ValueError("Time to horizon cannot be negative.")
 
     return float(
-        mid_price
-        - inventory
-        * risk_aversion
-        * volatility**2
-        * time_to_horizon
+        mid_price - inventory * risk_aversion * volatility**2 * time_to_horizon
     )
 
 
@@ -90,22 +86,11 @@ def optimal_half_spread(
     if distance_sensitivity <= 0:
         raise ValueError("Distance sensitivity must be positive.")
 
-    inventory_risk_component = (
-        0.5
-        * risk_aversion
-        * volatility**2
-        * time_to_horizon
-    )
+    inventory_risk_component = 0.5 * risk_aversion * volatility**2 * time_to_horizon
 
-    liquidity_component = (
-        log1p(risk_aversion / distance_sensitivity)
-        / risk_aversion
-    )
+    liquidity_component = log1p(risk_aversion / distance_sensitivity) / risk_aversion
 
-    return float(
-        inventory_risk_component
-        + liquidity_component
-    )
+    return float(inventory_risk_component + liquidity_component)
 
 
 @dataclass
@@ -170,13 +155,8 @@ class AvellanedaStoikovStrategy:
         if not isfinite(self.risk_aversion) or self.risk_aversion <= 0:
             raise ValueError("Risk aversion must be finite and positive.")
 
-        if (
-            not isfinite(self.distance_sensitivity)
-            or self.distance_sensitivity <= 0
-        ):
-            raise ValueError(
-                "Distance sensitivity must be finite and positive."
-            )
+        if not isfinite(self.distance_sensitivity) or self.distance_sensitivity <= 0:
+            raise ValueError("Distance sensitivity must be finite and positive.")
 
         if not isfinite(self.time_horizon) or self.time_horizon <= 0:
             raise ValueError("Time horizon must be finite and positive.")
@@ -187,26 +167,18 @@ class AvellanedaStoikovStrategy:
         if not isfinite(self.tick_size) or self.tick_size <= 0:
             raise ValueError("Tick size must be finite and positive.")
 
-        if (
-            not isfinite(self.inventory_limit)
-            or self.inventory_limit <= 0
-        ):
-            raise ValueError(
-                "Inventory limit must be finite and positive."
-            )
+        if not isfinite(self.inventory_limit) or self.inventory_limit <= 0:
+            raise ValueError("Inventory limit must be finite and positive.")
 
         if (
             not isfinite(self.minimum_quote_distance)
             or self.minimum_quote_distance <= 0
         ):
-            raise ValueError(
-                "Minimum quote distance must be finite and positive."
-            )
+            raise ValueError("Minimum quote distance must be finite and positive.")
 
         if (
             not isfinite(self.maximum_quote_distance)
-            or self.maximum_quote_distance
-            < self.minimum_quote_distance
+            or self.maximum_quote_distance < self.minimum_quote_distance
         ):
             raise ValueError("Invalid maximum quote distance.")
 
@@ -214,9 +186,7 @@ class AvellanedaStoikovStrategy:
             self.volatility_estimator,
             "current_volatility",
         ):
-            raise ValueError(
-                "Volatility estimator must expose current_volatility."
-            )
+            raise ValueError("Volatility estimator must expose current_volatility.")
 
     def reset(self) -> None:
         reset = getattr(
@@ -260,42 +230,21 @@ class AvellanedaStoikovStrategy:
                 time,
             )
         ):
-            raise ValueError(
-                "Quote inputs must be finite."
-            )
+            raise ValueError("Quote inputs must be finite.")
 
         if mid_price <= 0:
-            raise ValueError(
-                "Mid price must be positive."
-            )
+            raise ValueError("Mid price must be positive.")
 
-        if (
-            time < 0
-            or time > self.time_horizon + 1e-12
-        ):
-            raise ValueError(
-                "Quote time must lie within the strategy horizon."
-            )
+        if time < 0 or time > self.time_horizon + 1e-12:
+            raise ValueError("Quote time must lie within the strategy horizon.")
 
-        if (
-            abs(inventory)
-            > self.inventory_limit + 1e-12
-        ):
-            raise ValueError(
-                "Inventory exceeds configured limit."
-            )
+        if abs(inventory) > self.inventory_limit + 1e-12:
+            raise ValueError("Inventory exceeds configured limit.")
 
-        volatility = float(
-            self.volatility_estimator.current_volatility
-        )
+        volatility = float(self.volatility_estimator.current_volatility)
 
-        if (
-            not isfinite(volatility)
-            or volatility < 0
-        ):
-            raise ValueError(
-                "Estimated volatility must be finite and non-negative."
-            )
+        if not isfinite(volatility) or volatility < 0:
+            raise ValueError("Estimated volatility must be finite and non-negative.")
 
         time_to_horizon = max(
             self.time_horizon - time,
@@ -317,23 +266,13 @@ class AvellanedaStoikovStrategy:
             distance_sensitivity=self.distance_sensitivity,
         )
 
-        theoretical_bid = (
-            target_reservation_price
-            - target_half_spread
-        )
+        theoretical_bid = target_reservation_price - target_half_spread
 
-        theoretical_ask = (
-            target_reservation_price
-            + target_half_spread
-        )
+        theoretical_ask = target_reservation_price + target_half_spread
 
-        theoretical_bid_distance = (
-            mid_price - theoretical_bid
-        )
+        theoretical_bid_distance = mid_price - theoretical_bid
 
-        theoretical_ask_distance = (
-            theoretical_ask - mid_price
-        )
+        theoretical_ask_distance = theoretical_ask - mid_price
 
         bid_distance = min(
             max(
@@ -363,18 +302,12 @@ class AvellanedaStoikovStrategy:
             <= self.maximum_quote_distance
         )
 
-        unrounded_bid = (
-            mid_price - bid_distance
-        )
+        unrounded_bid = mid_price - bid_distance
 
-        unrounded_ask = (
-            mid_price + ask_distance
-        )
+        unrounded_ask = mid_price + ask_distance
 
         if unrounded_bid <= 0:
-            raise ValueError(
-                "Configured quote distance produces a non-positive bid."
-            )
+            raise ValueError("Configured quote distance produces a non-positive bid.")
 
         bid = round_bid_to_tick(
             unrounded_bid,
@@ -411,50 +344,24 @@ class AvellanedaStoikovStrategy:
 
         validate_quote(quote)
 
-        self._last_reservation_price = (
-            target_reservation_price
-        )
-        self._last_target_half_spread = (
-            target_half_spread
-        )
-        self._last_time_to_horizon = (
-            time_to_horizon
-        )
+        self._last_reservation_price = target_reservation_price
+        self._last_target_half_spread = target_half_spread
+        self._last_time_to_horizon = time_to_horizon
         self._last_bid_distance = bid_distance
         self._last_ask_distance = ask_distance
-        self._last_bid_clipped = float(
-            bid_clipped
-        )
-        self._last_ask_clipped = float(
-            ask_clipped
-        )
+        self._last_bid_clipped = float(bid_clipped)
+        self._last_ask_clipped = float(ask_clipped)
 
         return quote
 
     def diagnostics(self) -> dict[str, float]:
         return {
-            "estimated_volatility": float(
-                self.volatility_estimator.current_volatility
-            ),
-            "reservation_price": float(
-                self._last_reservation_price
-            ),
-            "target_half_spread": float(
-                self._last_target_half_spread
-            ),
-            "time_to_horizon": float(
-                self._last_time_to_horizon
-            ),
-            "as_bid_distance": float(
-                self._last_bid_distance
-            ),
-            "as_ask_distance": float(
-                self._last_ask_distance
-            ),
-            "as_bid_clipped": float(
-                self._last_bid_clipped
-            ),
-            "as_ask_clipped": float(
-                self._last_ask_clipped
-            ),
+            "estimated_volatility": float(self.volatility_estimator.current_volatility),
+            "reservation_price": float(self._last_reservation_price),
+            "target_half_spread": float(self._last_target_half_spread),
+            "time_to_horizon": float(self._last_time_to_horizon),
+            "as_bid_distance": float(self._last_bid_distance),
+            "as_ask_distance": float(self._last_ask_distance),
+            "as_bid_clipped": float(self._last_bid_clipped),
+            "as_ask_clipped": float(self._last_ask_clipped),
         }

@@ -1,8 +1,12 @@
 """Observable side-specific adverse-selection estimator."""
+
 from __future__ import annotations
-from dataclasses import dataclass, field
+
 from collections.abc import Sequence
+from dataclasses import dataclass, field
+
 from .market_primitives import Trade
+
 
 @dataclass
 class EWMAAdverseSelectionEstimator:
@@ -23,15 +27,20 @@ class EWMAAdverseSelectionEstimator:
         self._ask_loss = self.initial_ask_loss
 
     @property
-    def bid_loss(self) -> float: return self._bid_loss
+    def bid_loss(self) -> float:
+        return self._bid_loss
+
     @property
-    def ask_loss(self) -> float: return self._ask_loss
+    def ask_loss(self) -> float:
+        return self._ask_loss
 
     def _bound(self, x: float) -> float:
         x = max(x, 0.0)
         return min(x, self.maximum_loss) if self.maximum_loss is not None else x
 
-    def update(self, trades: Sequence[Trade], mid_price_start: float, mid_price_end: float) -> None:
+    def update(
+        self, trades: Sequence[Trade], mid_price_start: float, mid_price_end: float
+    ) -> None:
         move = mid_price_end - mid_price_start
         if any(t.side == "buy" for t in trades):
             observed = self._bound(-move)
